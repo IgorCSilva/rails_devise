@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  rails_devise:
+    build:
+      context: .
+      dockerfile: Dockerfile.project
+    container_name: rails_devise
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
