@@ -1,8 +1,55 @@
 # Rails with Devise
 
-How to add authentication using Devise gem in your rails projects.
+How to add authentication using Devise gem in your rails projects using docker.
 
 Tutorial: https://www.digitalocean.com/community/tutorials/how-to-set-up-user-authentication-with-devise-in-a-rails-7-application
+
+**Obs.:** The application name used to create this tutorial is `rails_devise`. Update to your application name.
+
+## Docker configuration
+Set the docker-compose.yaml file.
+```yml
+version: '3'
+
+services:
+  rails_devise:
+    build:
+      context: .
+      dockerfile: Dockerfile.project
+    container_name: rails_devise
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+
+```
+
+Set the Dockerfile.project with the following code.
+```dockerfile
+
+FROM ruby:3.3.1
+
+RUN apt-get update -yqq \
+  && apt-get install -yqq --no-install-recommends \
+  nodejs \
+  libqt5webkit5-dev \
+  && apt-get -q clean \
+  && rm -rf /var/lib/apt/lists
+
+WORKDIR /app
+
+COPY Gemfile* ./
+
+RUN bundle install
+
+COPY . .
+
+# Precompile assets for production
+# RUN bundle exec rake assets:precompile
+
+# Specify the command to run the application
+CMD ["rails", "server", "-b", "0.0.0.0"]
+```
 
 ## Install and configure
 
